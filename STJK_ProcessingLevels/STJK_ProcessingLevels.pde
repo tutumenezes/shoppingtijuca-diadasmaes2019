@@ -25,7 +25,7 @@ PImage heartImg;
 PImage heartOutline;
 
 // Levels and Variables
-int videoId, notespeed, changenum, success, won, gamemode;
+int videoId, notespeed, changenum, success, won, gamemode, lost;
 char response;
 int bgcolor;          
 int[] serialInArray = new int[2];    // Where we'll put what we receive — change the number for the number of variables incoming from Serial
@@ -92,6 +92,8 @@ void setup() {
   notespeed = 1; //note speed, changing this will up the difficulity, putting it too high will make 
                
   changenum = 60; // % number of notes created. Biggest number == less notes
+  
+  lost = 0;
                   
   success = 0; // Will be set to one if a player successfully completes a level.
   won = 0; // Will be set to one if a player successfully completes all levels.
@@ -121,6 +123,10 @@ void draw() {
 
   
  if (gamemode == 2) {
+   
+   error.rewind();
+   lost = 0;
+   
    image(movie0, 0, 0);
    movie0.play();
    if (keys[0] || keys[1]) { //press both keys to start
@@ -207,6 +213,7 @@ void draw() {
   if (score == 0) { // Game Over!
     gamemode = 1; // Switch to game mode in which player decides what to do.
     success = 0;
+    lost = 1;
     error.play();
     delay(100);
     text("Oh No! Continue?",width/2,height/2);
@@ -221,10 +228,20 @@ void draw() {
       won = 0;
       delay(1000);
       gamemode = 2; // Go back into play mode.
-    } else {
+    } else if(lost == 1) {
+        notespeed = 1;
+        changenum = 60;  // Player wants to start the game over.
+        score = 10; // Reset the score variable.
+        success = 0;  // Reset the success variable.
+        response = 'x'; // Reset the response variable.
+        won = 0;
+        delay(100);
+        gamemode = 2; // Go back into play mode. 
+    }
+    else {
       if (gamemode==1) { 
         if (success == 1) { // Player wants to continue to next level.
-          //changenum += 1; // makes notes appear slower
+          changenum -= 2; // makes notes appear slower
           notespeed += 1;  // makes notes roll much faster
         } else changenum = 60;  // Player wants to start the game over.
           score = 10; // Reset the score variable.
