@@ -224,7 +224,7 @@ void draw() {
     } else {
       if (gamemode==1) { 
         if (success == 1) { // Player wants to continue to next level.
-          changenum += 2; // makes notes appear slower
+          //changenum += 1; // makes notes appear slower
           notespeed += 1;  // makes notes roll much faster
         } else changenum = 60;  // Player wants to start the game over.
           score = 10; // Reset the score variable.
